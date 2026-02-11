@@ -1,1 +1,74 @@
-🧠 性格底色深度测评 | Personality Background Depth Test中文 | English | 日本語<a id="zh"></a>🇨🇳 中文说明1. 功能简介这是一个基于网页的纯算法性格测评工具。通过 30 道精心设计的题目，从五个关键维度分析用户的性格底色。项目完全运行于前端，不依赖 AI 接口，确保了测评结果的稳定性和极速响应。2. 计算原理与心理学支撑本系统采用学术界公认的 “大五人格模型”（Big Five Personality Traits / OCEAN） 为核心架构：维度划分：外向性 (E)、尽责性 (C)、情绪性 (N)、宜人性 (A)、开放性 (O)。计分公式：采用维度加权累加法。每个维度包含 6 道题目，选项分值分布为 [-1, 1, 3]。判定逻辑：$$\text{Dimension Score} = \sum_{i=1}^{n} \text{Option Score}_i$$系统设定了显著特征阈值（Score > 6）。只有当某一维度得分超过阈值时，才会被判定为该性格特征，从而生成具有针对性的优势与不足分析。3. 交流与反馈欢迎加入项目交流群进行反馈或获取最新动态：QQ 群号：4250325484. 声明本项自目前处于试验阶段，测评结果仅供个人参考。请勿用于任何商业用途。<a id="en"></a>🇺🇸 English Description1. IntroductionA pure-algorithm-based personality assessment tool. It analyzes user personality across five key dimensions through 30 meticulously designed questions. The project runs entirely on the frontend, ensuring stability and instant results without the need for external AI APIs.2. Methodology & PsychologyThe system is built upon the "Big Five Personality Traits" (OCEAN) model:Dimensions: Extraversion (E), Conscientiousness (C), Neuroticism (N), Agreeableness (A), and Openness (O).Scoring Formula: Utilizing a weighted summation method. Each dimension consists of 6 questions with option scores distributed as [-1, 1, 3].Logic:$$\text{Dimension Score} = \sum_{i=1}^{n} \text{Option Score}_i$$A threshold (Score > 6) is set to identify significant traits, generating personalized analysis of strengths and weaknesses.3. CommunityQQ Group: 4250325484. DisclaimerThis project is currently in the experimental stage. Results are for personal reference only. Commercial use is strictly prohibited.<a id="jp"></a>🇯🇵 日本語説明1. 機能概要アルゴリズムに基づいた性格診断ツールです。30の質問を通じて、5つの主要な次元からユーザーの性格を分析します。AIを使用せずフロントエンドのみで動作するため、高速で安定した診断が可能です。2. 計算原理と心理学的背景心理学で最も信頼されている 「ビッグファイブ（特性5因子モデル）」 を採用しています：次元: 外向性 (E)、誠実性 (C)、神経症傾向 (N)、協調性 (A)、開放性 (O)。計算式: 重み付け累積法を採用。各次元6問で構成され、選択肢のスコアは [-1, 1, 3] です。判定ロジック:$$\text{Dimension Score} = \sum_{i=1}^{n} \text{Option Score}_i$$しきい値（Score > 6）を設定し、顕著な特性を抽出。パーソナライズされた長所と短所の分析を生成します。3. コミュニティQQグループ: 4250325484. 免責事項このプロジェクトは試験段階にあります。診断結果は参考程度に留めてください。商用利用は固く禁止されています。
+# 🧠 性格底色深度测评 | Personality Background Depth Test
+
+[中文](#zh) | [English](#en) | [日本語](#jp)
+
+---
+
+<a id="zh"></a>
+
+## 🇨🇳 中文说明
+
+### 1. 功能简介
+这是一个基于网页的纯算法性格测评工具。通过 30 道精心设计的题目，从五个关键维度分析用户的性格底色。项目完全运行于前端，不依赖 AI 接口，确保了测评结果的稳定性和极速响应。
+
+### 2. 计算原理与心理学支撑
+本系统采用学术界公认的 **“大五人格模型”（Big Five Personality Traits / OCEAN）** 为核心架构：
+
+
+
+* **维度划分**：外向性 (E)、尽责性 (C)、情绪性 (N)、宜人性 (A)、开放性 (O)。
+* **计分公式**：采用**维度加权累加法**。每个维度包含 6 道题目，选项分值分布为 `[-1, 1, 3]`。
+* **判定逻辑**：
+    $$Score_{dim} = \sum_{i=1}^{6} Score_{option}$$
+    系统设定了显著特征阈值（Score > 6）。只有当某一维度得分超过阈值时，才会被判定为该性格特征。
+
+### 3. 交流与反馈
+欢迎加入项目交流群进行反馈或获取最新动态：
+* **QQ 群号**：`425032548`
+
+### 4. 声明
+本自目前处于**试验阶段**，测评结果仅供个人参考。**请勿用于任何商业用途。**
+
+---
+
+<a id="en"></a>
+
+## 🇺🇸 English Description
+
+### 1. Introduction
+A pure-algorithm-based personality assessment tool analyzing 5 key dimensions via 30 designed questions. 100% frontend execution for privacy and speed.
+
+### 2. Methodology & Psychology
+Built upon the **"Big Five Personality Traits" (OCEAN)** model:
+* **Scoring**: Uses weighted summation. Each trait has 6 questions ($Score \in [-1, 1, 3]$).
+* **Logic**: 
+    $$Score_{dim} = \sum_{i=1}^{6} Score_{option}$$
+    A threshold ($Score > 6$) identifies significant traits.
+
+### 3. Community
+* **QQ Group**: `425032548`
+
+### 4. Disclaimer
+**Experimental stage.** For personal reference only. **Commercial use is strictly prohibited.**
+
+---
+
+<a id="jp"></a>
+
+## 🇯🇵 日本語説明
+
+### 1. 機能概要
+アルゴリズムに基づいた性格診断ツール。30の質問を通じて、5つの主要な次元から性格を分析します。
+
+### 2. 計算原理と心理学的背景
+**「ビッグファイブ（特性5因子モデル）」** を採用しています：
+* **計算式**: **重み付け累積法**。各次元6問、スコアは `[-1, 1, 3]` です。
+* **ロジック**: 
+    $$Score_{dim} = \sum_{i=1}^{6} Score_{option}$$
+    しきい値（Score > 6）に基づき、顕著な特性を抽出します。
+
+### 3. コミュニティ
+* **QQグループ**: `425032548`
+
+### 4. 免責事項
+**試験段階**のプロジェクトです。診断結果は参考用です。**商用利用は固く禁止されています。**
