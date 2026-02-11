@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>性格底色深度测评</title>
+    <style>
+         :root {
+            --primary: #6366f1;
+            --bg: #f8fafc;
+            --text: #1e293b;
+        }
+        
+        body {
+            font-family: 'PingFang SC', system-ui;
+            background: var(--bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text);
+        }
+        
+        #app-container {
+            background: white;
+            padding: 35px;
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+        }
+        /* 封面样式 */
+        
+        #cover-page {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 400px;
+        }
+        
+        .cover-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-top: 40px;
+        }
+        
+        .cover-btns {
+            margin-top: 30px;
+        }
+        
+        .btn-start {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+        
+        .btn-exit {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid #e2e8f0;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .footer-info {
+            font-size: 12px;
+            color: #cbd5e1;
+            margin-top: 40px;
+            line-height: 1.6;
+        }
+        /* 测试页和结果页隐藏 */
+        
+        #quiz-page,
+        #result-page {
+            display: none;
+        }
+        /* 题目样式 */
+        
+        .progress-bar {
+            height: 6px;
+            background: #f1f5f9;
+            border-radius: 3px;
+            margin-bottom: 25px;
+        }
+        
+        #bar-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: 0.4s;
+        }
+        
+        .option-btn {
+            display: block;
+            width: 100%;
+            margin: 12px 0;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            text-align: left;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+        
+        .option-btn:hover {
+            border-color: var(--primary);
+            background: #f5f7ff;
+            transform: scale(1.02);
+        }
+        /* 结果样式 */
+        
+        .trait-tag {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 5px;
+            background: #eef2ff;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .report-box {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 18px;
+            margin-top: 20px;
+            text-align: left;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app-container">
+        <div id="cover-page">
+            <div>
+                <div class="cover-title">一个简单的性格分析测试</div>
+                <p style="color: #64748b; font-size: 14px;">探索你内心深处未曾察觉的底色</p>
+            </div>
+
+            <div class="cover-btns">
+                <button class="btn-start" onclick="startQuiz()">开始答题</button>
+                <button class="btn-exit" onclick="exitPage()">退出测试</button>
+            </div>
+
+            <div class="footer-info">
+                简介：本测试基于心理学大五人格模型简化开发，仅供参考。<br> 作者：ndy100
+            </div>
+        </div>
+
+        <div id="quiz-page">
+            <div class="progress-bar">
+                <div id="bar-fill"></div>
+            </div>
+            <p id="progress-text" style="font-size: 12px; color: #94a3b8;"></p>
+            <h2 id="question-text" style="font-size: 20px; margin-bottom: 20px;"></h2>
+            <div id="options-container"></div>
+        </div>
+
+        <div id="result-page">
+            <h2 style="color: var(--primary);">测评分析报告</h2>
+            <div id="trait-tags"></div>
+            <div class="report-box">
+                <p><strong style="color: #059669;">✨ 核心优势：</strong><br><span id="pro-text"></span></p>
+                <p><strong style="color: #dc2626;">⚠️ 潜在不足：</strong><br><span id="con-text"></span></p>
+            </div>
+            <div style="margin-top: 10px;">
+                <img src="https://img.shields.io/github/stars/nidaye100/personality-test?style=social" alt="stars">
+            </div>
+            <div style="margin-top: 30px; padding: 15px; background: #fffbeb; border: 1px dashed #f59e0b; border-radius: 12px; text-align: center;">
+                <p style="font-size: 13px; color: #b45309; margin-bottom: 10px;">🌟 如果觉得准，请支持作者点个 Star 吧！</p>
+                <button onclick="window.open('https://github.com/nidaye100/personality-test')" style="background: #24292f; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+        <svg height="16" viewBox="0 0 16 16" width="16" fill="white"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"></path></svg>
+        给本项目点星 (Star)
+    </button>
+            </div>
+            <button onclick="location.reload()" style="margin-top:20px; width:100%; padding:15px; border:none; border-radius:12px; background:#e2e8f0; cursor:pointer;">返回首页</button>
+        </div>
+    </div>
+
+    <script>
+        // 维度说明：E(外向), C(尽责), N(情绪), A(宜人), O(开放)
+        const questions = [
+            // --- E: 外向性 (6题) ---
+            {
+                q: "1. 在聚会中，你通常是？",
+                options: [{
+                    t: "带动气氛的焦点",
+                    type: "E",
+                    score: 3
+                }, {
+                    t: "随和的参与者",
+                    type: "E",
+                    score: 1
+                }, {
+                    t: "安静的观察者",
+                    type: "E",
+                    score: -1
+                }]
+            }, {
+                q: "2. 独自待一整天会让你觉得？",
+                options: [{
+                    t: "难以忍受，想找人说话",
+                    type: "E",
+                    score: 3
+                }, {
+                    t: "还可以，能接受",
+                    type: "E",
+                    score: 1
+                }, {
+                    t: "很享受，这是充电时间",
+                    type: "E",
+                    score: -1
+                }]
+            }, {
+                q: "3. 遇到陌生人，你通常会？",
+                options: [{
+                    t: "主动打招呼",
+                    type: "E",
+                    score: 3
+                }, {
+                    t: "对方开口才回应",
+                    type: "E",
+                    score: 1
+                }, {
+                    t: "尽量避免眼神接触",
+                    type: "E",
+                    score: -1
+                }]
+            }, {
+                q: "4. 你更喜欢哪种工作方式？",
+                options: [{
+                    t: "团队协作交流",
+                    type: "E",
+                    score: 3
+                }, {
+                    t: "独立工作偶尔交流",
+                    type: "E",
+                    score: 1
+                }, {
+                    t: "全程独立完成",
+                    type: "E",
+                    score: -1
+                }]
+            }, {
+                q: "5. 在社交软件上，你属于？",
+                options: [{
+                    t: "经常发布动态",
+                    type: "E",
+                    score: 3
+                }, {
+                    t: "偶尔分享",
+                    type: "E",
+                    score: 1
+                }, {
+                    t: "常年潜水看戏",
+                    type: "E",
+                    score: -1
+                }]
+            }, {
+                q: "6. 面对新环境，你的融入速度？",
+                options: [{
+                    t: "极快，很快交到朋友",
+                    type: "E",
+                    score: 3
+                }, {
+                    t: "中等，需要几天",
+                    type: "E",
+                    score: 1
+                }, {
+                    t: "很慢，很难融入",
+                    type: "E",
+                    score: -1
+                }]
+            },
+
+            // --- C: 尽责性 (6题) ---
+            {
+                q: "7. 你的房间或工作台通常是？",
+                options: [{
+                    t: "井井有条",
+                    type: "C",
+                    score: 3
+                }, {
+                    t: "稍微有点乱",
+                    type: "C",
+                    score: 1
+                }, {
+                    t: "一团乱麻",
+                    type: "C",
+                    score: -1
+                }]
+            }, {
+                q: "8. 面对最后期限（Deadline），你会？",
+                options: [{
+                    t: "提前完成",
+                    type: "C",
+                    score: 3
+                }, {
+                    t: "按时踩点完成",
+                    type: "C",
+                    score: 1
+                }, {
+                    t: "经常拖延甚至延期",
+                    type: "C",
+                    score: -1
+                }]
+            }, {
+                q: "9. 你做决定前通常会？",
+                options: [{
+                    t: "做详细的调查和计划",
+                    type: "C",
+                    score: 3
+                }, {
+                    t: "大致考虑一下",
+                    type: "C",
+                    score: 1
+                }, {
+                    t: "凭直觉冲动决定",
+                    type: "C",
+                    score: -1
+                }]
+            }, {
+                q: "10. 如果事情没按计划进行，你会？",
+                options: [{
+                    t: "感到非常不安",
+                    type: "C",
+                    score: 3
+                }, {
+                    t: "有点烦但能应对",
+                    type: "C",
+                    score: 1
+                }, {
+                    t: "随遇而安，无所谓",
+                    type: "C",
+                    score: -1
+                }]
+            }, {
+                q: "11. 朋友认为你是一个靠谱的人吗？",
+                options: [{
+                    t: "绝对是，有始有终",
+                    type: "C",
+                    score: 3
+                }, {
+                    t: "大多数时候是",
+                    type: "C",
+                    score: 1
+                }, {
+                    t: "看心情，有时会消失",
+                    type: "C",
+                    score: -1
+                }]
+            }, {
+                q: "12. 你是否经常丢三落四（忘带钥匙等）？",
+                options: [{
+                    t: "几乎从不",
+                    type: "C",
+                    score: 3
+                }, {
+                    t: "偶尔发生",
+                    type: "C",
+                    score: 1
+                }, {
+                    t: "经常发生",
+                    type: "C",
+                    score: -1
+                }]
+            },
+
+            // --- N: 情绪性 (6题) ---
+            {
+                q: "13. 遇到一点小麻烦（如咖啡洒了），你会？",
+                options: [{
+                    t: "非常心烦，影响半天心情",
+                    type: "N",
+                    score: 3
+                }, {
+                    t: "烦一下就过了",
+                    type: "N",
+                    score: 1
+                }, {
+                    t: "完全不在意",
+                    type: "N",
+                    score: -1
+                }]
+            }, {
+                q: "14. 你是否容易感到焦虑或压力？",
+                options: [{
+                    t: "经常感到紧张",
+                    type: "N",
+                    score: 3
+                }, {
+                    t: "压力大时才会",
+                    type: "N",
+                    score: 1
+                }, {
+                    t: "心理素质极强，很少焦虑",
+                    type: "N",
+                    score: -1
+                }]
+            }, {
+                q: "15. 面对别人的批评，你的反应？",
+                options: [{
+                    t: "反思很久，感到难受",
+                    type: "N",
+                    score: 3
+                }, {
+                    t: "有点在意，但不影响生活",
+                    type: "N",
+                    score: 1
+                }, {
+                    t: "左耳进右耳出",
+                    type: "N",
+                    score: -1
+                }]
+            }, {
+                q: "16. 你的情绪波动频率？",
+                options: [{
+                    t: "阴晴不定，变化快",
+                    type: "N",
+                    score: 3
+                }, {
+                    t: "正常范围波动",
+                    type: "N",
+                    score: 1
+                }, {
+                    t: "情绪极其稳定",
+                    type: "N",
+                    score: -1
+                }]
+            }, {
+                q: "17. 遇到挫折后，你恢复的速度？",
+                options: [{
+                    t: "很慢，容易沉溺其中",
+                    type: "N",
+                    score: 3
+                }, {
+                    t: "中等，需要点时间",
+                    type: "N",
+                    score: 1
+                }, {
+                    t: "极快，立马找解决方案",
+                    type: "N",
+                    score: -1
+                }]
+            }, {
+                q: "18. 你是否经常担心还没发生的事？",
+                options: [{
+                    t: "是的，总是想很多",
+                    type: "N",
+                    score: 3
+                }, {
+                    t: "偶尔会想",
+                    type: "N",
+                    score: 1
+                }, {
+                    t: "不，发生了再说",
+                    type: "N",
+                    score: -1
+                }]
+            },
+
+            // --- A: 宜人性 (6题) ---
+            {
+                q: "19. 你在争论中通常扮演什么角色？",
+                options: [{
+                    t: "妥协者，不想伤感情",
+                    type: "A",
+                    score: 3
+                }, {
+                    t: "理智中立者",
+                    type: "A",
+                    score: 1
+                }, {
+                    t: "坚持立场，甚至咄咄逼人",
+                    type: "A",
+                    score: -1
+                }]
+            }, {
+                q: "20. 看到路上流浪猫狗，你会？",
+                options: [{
+                    t: "感到难过甚至想帮忙",
+                    type: "A",
+                    score: 3
+                }, {
+                    t: "同情但不会有行动",
+                    type: "A",
+                    score: 1
+                }, {
+                    t: "没什么感觉",
+                    type: "A",
+                    score: -1
+                }]
+            }, {
+                q: "21. 你是否容易信任他人？",
+                options: [{
+                    t: "是的，人性本善",
+                    type: "A",
+                    score: 3
+                }, {
+                    t: "观察一段时间再说",
+                    type: "A",
+                    score: 1
+                }, {
+                    t: "不，人都是自私的",
+                    type: "A",
+                    score: -1
+                }]
+            }, {
+                q: "22. 当别人向你借钱（小数额）时？",
+                options: [{
+                    t: "很难拒绝",
+                    type: "A",
+                    score: 3
+                }, {
+                    t: "看关系远近",
+                    type: "A",
+                    score: 1
+                }, {
+                    t: "不想借就直接回绝",
+                    type: "A",
+                    score: -1
+                }]
+            }, {
+                q: "23. 你是否经常对他人的痛苦产生共鸣？",
+                options: [{
+                    t: "经常感同身受",
+                    type: "A",
+                    score: 3
+                }, {
+                    t: "偶尔会有感觉",
+                    type: "A",
+                    score: 1
+                }, {
+                    t: "很难共情",
+                    type: "A",
+                    score: -1
+                }]
+            }, {
+                q: "24. 你认为成功最重要的因素是？",
+                options: [{
+                    t: "合作与共赢",
+                    type: "A",
+                    score: 3
+                }, {
+                    t: "努力工作",
+                    type: "A",
+                    score: 1
+                }, {
+                    t: "竞争与超越",
+                    type: "A",
+                    score: -1
+                }]
+            },
+
+            // --- O: 开放性 (6题) ---
+            {
+                q: "25. 你对抽象艺术或前卫科技？",
+                options: [{
+                    t: "非常有兴趣，喜欢钻研",
+                    type: "O",
+                    score: 3
+                }, {
+                    t: "一般般，能理解",
+                    type: "O",
+                    score: 1
+                }, {
+                    t: "觉得毫无意义",
+                    type: "O",
+                    score: -1
+                }]
+            }, {
+                q: "26. 出门旅游，你更倾向于？",
+                options: [{
+                    t: "去从未去过的地方探险",
+                    type: "O",
+                    score: 3
+                }, {
+                    t: "去热门但安全的地方",
+                    type: "O",
+                    score: 1
+                }, {
+                    t: "去已经熟悉的老地方",
+                    type: "O",
+                    score: -1
+                }]
+            }, {
+                q: "27. 你的朋友圈子通常？",
+                options: [{
+                    t: "五花八门，什么人都有",
+                    type: "O",
+                    score: 3
+                }, {
+                    t: "背景相似的一群人",
+                    type: "O",
+                    score: 1
+                }, {
+                    t: "只有几个固定的老友",
+                    type: "O",
+                    score: -1
+                }]
+            }, {
+                q: "28. 你是否喜欢思考“如果...会怎样”这类问题？",
+                options: [{
+                    t: "经常胡思乱想，想象力丰富",
+                    type: "O",
+                    score: 3
+                }, {
+                    t: "偶尔会想",
+                    type: "O",
+                    score: 1
+                }, {
+                    t: "更关注当下的现实",
+                    type: "O",
+                    score: -1
+                }]
+            }, {
+                q: "29. 面对传统规矩，你的态度？",
+                options: [{
+                    t: "喜欢挑战并尝试打破",
+                    type: "O",
+                    score: 3
+                }, {
+                    t: "在规矩内创新",
+                    type: "O",
+                    score: 1
+                }, {
+                    t: "尊重并严格遵守",
+                    type: "O",
+                    score: -1
+                }]
+            }, {
+                q: "30. 你更喜欢哪种书或电影？",
+                options: [{
+                    t: "科幻、烧脑、奇幻类",
+                    type: "O",
+                    score: 3
+                }, {
+                    t: "写实、励志类",
+                    type: "O",
+                    score: 1
+                }, {
+                    t: "日常、喜剧类",
+                    type: "O",
+                    score: -1
+                }]
+            }
+        ];
+
+        const feedback = {
+            E: {
+                name: "外向型",
+                pro: "具备极强的社交能量和领导潜力，能在人群中快速获得支持。",
+                con: "有时可能显得过于强势，或因过分依赖外界反馈而感到孤独。"
+            },
+            C: {
+                name: "尽责型",
+                pro: "做事严谨、自律且高度靠谱，是团队中不可或缺的定海神针。",
+                con: "容易陷入完美主义的陷阱，对自己和他人过于苛刻，易产生职业倦怠。"
+            },
+            N: {
+                name: "敏感型",
+                pro: "情感细腻且洞察力极强，能觉察到他人忽略的细节，极富同理心。",
+                con: "情绪波动较大，容易受外界环境负面信号的影响，导致精神内耗。"
+            },
+            A: {
+                name: "宜人型",
+                pro: "性格温和友善，是极佳的合作者，容易建立深度的人际信任。",
+                con: "在竞争激烈的环境下可能因不愿冲突而委屈自己，缺乏必要的攻击性。"
+            },
+            O: {
+                name: "开放型",
+                pro: "思维开阔，充满创意，对新事物有极高的接受度，极具创新精神。",
+                con: "可能因兴趣过于广泛而缺乏持久力，给人以“不切实际”或“三分钟热度”的印象。"
+            }
+        };
+
+        let userScores = {
+            E: 0,
+            C: 0,
+            N: 0,
+            A: 0,
+            O: 0
+        };
+        let currentIndex = 0;
+
+        function startQuiz() {
+            document.getElementById('cover-page').style.display = 'none';
+            document.getElementById('quiz-page').style.display = 'block';
+            showQuestion();
+        }
+
+        function exitPage() {
+            if (confirm("确定要退出测试吗？")) {
+                window.close();
+                setTimeout(() => {
+                    window.location.href = "about:blank";
+                }, 500);
+            }
+        }
+
+        function showQuestion() {
+            const q = questions[currentIndex];
+            document.getElementById('bar-fill').style.width = `${(currentIndex / questions.length) * 100}%`;
+            document.getElementById('progress-text').innerText = `Progress: ${currentIndex + 1} / ${questions.length}`;
+            document.getElementById('question-text').innerText = q.q;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.t;
+                btn.onclick = () => {
+                    userScores[opt.type] += opt.score;
+                    currentIndex++;
+                    if (currentIndex < questions.length) showQuestion();
+                    else showResult();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function showResult() {
+            document.getElementById('quiz-page').style.display = 'none';
+            document.getElementById('result-page').style.display = 'block';
+
+            let proStr = "",
+                conStr = "";
+            const tags = document.getElementById('trait-tags');
+            tags.innerHTML = ''; // 清空可能存在的旧内容
+
+            for (let key in userScores) {
+                // 判定阈值：6题总分最高18分，我们设>6分为显著特征
+                if (userScores[key] > 6) {
+                    const span = document.createElement('span');
+                    span.className = 'trait-tag';
+                    span.innerText = feedback[key].name;
+                    tags.appendChild(span);
+                    proStr += feedback[key].pro + " ";
+                    conStr += feedback[key].con + " ";
+                }
+            }
+
+            document.getElementById('pro-text').innerText = proStr || "你的性格非常稳重且平衡，不轻易显露极端特质。";
+            document.getElementById('con-text').innerText = conStr || "在特定压力环境下可能显得决策不够果断。";
+        }
+    </script>
+
+</body>
+
+</html>
